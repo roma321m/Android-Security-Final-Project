@@ -1,9 +1,11 @@
 package com.example.androidsecurityfinalproject.navigation
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import com.example.androidsecurityfinalproject.manager.PermissionManager
 import com.example.androidsecurityfinalproject.navigation.Screens.Companion.MAIN_SCREEN
 import com.example.androidsecurityfinalproject.navigation.destinations.decryptComposable
 import com.example.androidsecurityfinalproject.navigation.destinations.encryptComposable
@@ -15,7 +17,9 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 @Composable
 fun SetUpNavigation(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    permissionManager: PermissionManager,
+    permissionLauncher: ActivityResultLauncher<Array<String>>
 ) {
 
     val screen = remember(navController) {
@@ -28,14 +32,14 @@ fun SetUpNavigation(
     ) {
         mainComposable(
             navigateToNextScreen = screen.main,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            permissionManager = permissionManager,
+            permissionLauncher = permissionLauncher
         )
         encryptComposable(
-            navigateToMainScreen = screen.encrypt,
             mainViewModel = mainViewModel
         )
         decryptComposable(
-            navigateToMainScreen = screen.decrypt,
             mainViewModel = mainViewModel
         )
     }

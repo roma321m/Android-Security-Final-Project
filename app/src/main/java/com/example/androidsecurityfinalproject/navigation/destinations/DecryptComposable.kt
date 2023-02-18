@@ -11,14 +11,12 @@ import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.decryptComposable(
-    navigateToMainScreen: () -> Unit,
     mainViewModel: MainViewModel
 ) {
     composable(
         route = DECRYPT_SCREEN
     ) {
         DecryptScreen(
-            navigateToMainScreen = navigateToMainScreen,
             viewModel = mainViewModel
         )
     }

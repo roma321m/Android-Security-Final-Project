@@ -13,14 +13,12 @@ import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.encryptComposable(
-    navigateToMainScreen: () -> Unit,
     mainViewModel: MainViewModel
 ) {
     composable(
         route = ENCRYPT_SCREEN
     ) {
         EncryptScreen(
-            navigateToMainScreen = navigateToMainScreen,
             viewModel = mainViewModel
         )
     }
