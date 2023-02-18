@@ -5,20 +5,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.androidsecurityfinalproject.ui.component.PickImage
 import com.example.androidsecurityfinalproject.util.ViewModelEvent
 import com.example.androidsecurityfinalproject.viewModels.MainViewModel
+import com.example.androidsecurityfinalproject.viewModels.MainViewModel.Companion.MAX_TEXT_LENGTH
 
 @Composable
 fun EncryptScreen(
@@ -43,14 +44,30 @@ fun EncryptScreen(
 
         Spacer(modifier = Modifier.padding(20.dp))
 
-        TextField(
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.9f),
             value = viewModel.toEncryptText,
             onValueChange = { newText ->
                 viewModel.handleEvent(ViewModelEvent.UpdateToEncryptText(newText))
             },
             placeholder = {
+                Text(text = "Top secret :)")
+            },
+            label = {
                 Text(text = "Text to encrypt")
-            }
+            },
+            textStyle = MaterialTheme.typography.body1,
+            singleLine = true
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(end = 8.dp),
+            text = "${viewModel.toEncryptText.length} / $MAX_TEXT_LENGTH",
+            textAlign = TextAlign.End,
+            style = MaterialTheme.typography.caption,
+            color = if (viewModel.toEncryptText.length >= MAX_TEXT_LENGTH) Color.Red else Color.LightGray
         )
 
         Spacer(modifier = Modifier.padding(20.dp))

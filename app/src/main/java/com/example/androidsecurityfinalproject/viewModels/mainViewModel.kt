@@ -10,11 +10,15 @@ import androidx.lifecycle.ViewModel
 import com.example.androidsecurityfinalproject.manager.FileManager
 import com.example.androidsecurityfinalproject.util.ViewModelEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.Arrays
+import java.nio.ByteBuffer
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
+
+    companion object {
+        const val MAX_TEXT_LENGTH = 99
+    }
 
     var toDecryptImageUri by mutableStateOf<Uri?>(null)
         private set
@@ -45,7 +49,9 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun updateToEncryptText(newText: String) {
-        toEncryptText = newText
+        if (newText.length <= MAX_TEXT_LENGTH) {
+            toEncryptText = newText
+        }
     }
 
     private fun updateToDecryptImageUri(uri: Uri?) {
@@ -55,14 +61,20 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private fun encrypt(context: Context) {
         val fileName = "image_${FileManager.getTimeStamp()}.jpg"
         val byteArray = toEncryptImageUri?.let { fileManager.uriToByteArray(it, context) } ?: return
-        fileManager.saveFile(byteArray + toEncryptText.toByteArray(), fileName)
+        val fixedData = ByteBuffer.allocate(Int.SIZE_BYTES).putInt(toEncryptText.length).array()
+        fileManager.saveFile(byteArray + toEncryptText.toByteArray() + fixedData, fileName)
         fileManager.shareFile(fileName, context)
     }
 
     private fun decrypt(context: Context) {
         val byteArray = toDecryptImageUri?.let { fileManager.uriToBytes(it, context) } ?: return
-        val size = toEncryptText.toByteArray().size
-        val newByteArray = byteArray.sliceArray(IntRange(byteArray.size - size, byteArray.size -1))
+        val fixedData = 4
+        val size = try {
+            ByteBuffer.wrap(byteArray.sliceArray(IntRange(byteArray.size - fixedData, byteArray.size - 1))).int
+        } catch (e: Exception) {
+            0
+        }
+        val newByteArray = byteArray.sliceArray(IntRange(byteArray.size - size - fixedData, byteArray.size - 1 - fixedData))
         decryptedText = newByteArray.decodeToString()
     }
 }
