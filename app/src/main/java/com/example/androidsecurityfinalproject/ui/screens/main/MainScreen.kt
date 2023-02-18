@@ -95,7 +95,7 @@ fun ShowMainMenu(
                 navigateToNextScreen(Screen.ENCRYPT)
             }
         ) {
-            Text(text = "encrypt a picture into a link")
+            Text(text = "Encrypt data into a picture")
         }
 
         Button(
@@ -103,7 +103,7 @@ fun ShowMainMenu(
                 navigateToNextScreen(Screen.DECRYPT)
             }
         ) {
-            Text(text = "decrypt a picture from a link")
+            Text(text = "Decrypt data from a picture")
         }
     }
 }
